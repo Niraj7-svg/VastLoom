@@ -1,0 +1,40 @@
+# Python virtual environments
+.venv/
+venv/
+.venv-broken/
+env/
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+.coverage
+htmlcov/
+
+# Blender temporary and backup files
+*.blend1
+*.blend2
+*.blend@
+*.blend@*
+*.autosave
+
+# Vastloom project and generated cache files
+*.vloom
+cache/
+
+# Build and packaging output
+build/
+dist/
+*.zip
+*.egg-info/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

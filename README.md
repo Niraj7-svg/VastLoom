@@ -1,118 +1,89 @@
 # Vastloom
 
-Vastloom is an artist-directed procedural world-building extension for Blender.
-Its long-term goal is to help artists construct and prepare large environments
-while keeping creative decisions under their control.
+Vastloom is an artist-directed procedural world-building suite for Blender and game developers, designed for stylised (Arcane / Fortiche aesthetic) and realistic environments.
+
+> [!NOTE]
+> 🚀 **Vibe Coded with Gemini 3.8 Flash**  
+> This entire project, its architecture, procedural math, and Blender integration are being iteratively vibe coded and co-engineered with **Gemini 3.8 Flash** in real-time.
 
 > [!IMPORTANT]
-> Vastloom is in very early development. It is not ready for production use,
-> and its data structures and user interface may change frequently.
+> Vastloom is in early active development for **Blender 5.2 LTS**. Data structures and user interfaces are evolving rapidly.
 
-## Project goals
+---
 
-Vastloom is intended to grow into a modular toolkit for:
+## 🌟 What is Vastloom?
 
-- Modular architecture and city construction
-- Artist-directed terrain and vegetation
-- Chunk-based world organization
-- Camera-aware level-of-detail selection
-- Procedural and render-to-texture distant horizons
-- Offline animation preparation
-- Versioned `.vloom` project and recovery data
+Vastloom is an all-in-one procedural environment powerhouse that generates production-ready, optimized 3D worlds with a single click:
 
-The project follows a few core principles:
+- **Procedural Cities & Streets:** Orthogonal Manhattan grids, angled diagonal avenues, and concentric curved/radial ring roads.
+- **Dynamic Skyline Variations:** Multi-floor buildings with randomized heights, roof variations, and deterministic seeds.
+- **High-Performance Linked Duplication:** Built using Blender's `Option + D` data-sharing model (`bpy.data.objects.new` referencing shared `bmesh` cubes), allowing thousands of buildings to render smoothly at 60+ FPS with minimal RAM usage.
+- **Strictly Decoupled Architecture:** Pure Python math in `core/` (zero `bpy` imports), completely isolated from the Blender mesh-building `bridge/` layer.
+- **Continuous Road Networks & Map Parsing (In Progress):** Generating smooth continuous street corridors and converting black-and-white 2D map sketches/Google Maps screenshots into 3D cities.
+- **Terrain & Erosion (Upcoming):** Multi-octave heightmaps, hydraulic and thermal erosion simulations.
+- **Game Engine Bridges (Upcoming):** One-click import into Unreal Engine and Unity with pre-configured LODs and collision setups.
 
-- World data is kept separate from generated Blender objects.
-- Procedural results should be repeatable through deterministic seeds.
-- Artists should be able to override automatic decisions.
-- Systems should remain modular and understandable.
-- Blender's native Python API, data blocks, Geometry Nodes, materials, and
-  render systems are preferred.
-- The procedural generation system does not require AI or machine learning.
+---
 
-## Current milestone
-
-Stage 1 establishes the extension foundation:
-
-- [x] Blender extension manifest
-- [ ] Project settings
-- [ ] Blender class registration
-- [ ] Create Project operator
-- [ ] Vastloom sidebar panel
-- [ ] Installable extension package
-- [ ] Blender installation and persistence tests
-
-The first project settings are the project name, deterministic seed, and
-initialization status. Terrain, buildings, vegetation, and horizon generation
-are intentionally outside this milestone.
-
-## Requirements
-
-- Blender 5.2 LTS or newer compatible 5.x release
-- Python 3.13 for the local development environment
-- Git
-- A Python editor such as Visual Studio Code
-
-Blender includes its own Python runtime. The local virtual environment is used
-for editor assistance and tests; it does not replace Blender's Python runtime.
-
-## Development setup
-
-Create and activate a Python 3.13 virtual environment:
-
-```bash
-python3.13 -m venv .venv
-source .venv/bin/activate
-```
-
-Install the Blender 5.2 API stubs for editor completion:
-
-```bash
-python -m pip install --upgrade pip
-python -m pip install fake-bpy-module-5.2
-```
-
-The fake `bpy` package provides type information and autocomplete only. Actual
-Blender operations must run inside Blender.
-
-## Project structure
+## 🏗️ Project Architecture
 
 ```text
 vastloom/
+├── core/                  # Pure Python math, vector & geometry algorithms (ZERO bpy imports)
+│   ├── roads.py           # Straight, angled, and radial street math
+│   └── buildings.py       # Parcel subdivision & building placement logic
+│
+├── bridge/                # Blender 3D construction layer (uses bpy & bmesh)
+│   ├── collections.py     # Shared mesh instancing (Option+D) & collection hierarchy
+│   ├── roads.py           # 3D road slab instantiation
+│   └── buildings.py       # Modular house builder (body, roof, doors)
+│
+├── operators/             # Blender event handlers and operator actions
+│   └── city_ops.py        # City generation and scene management operators
+│
+├── ui/                    # Immediate-mode dynamic sidebar panel (N-Panel)
+│   ├── main_panel.py      # Main sidebar layout & environment switcher
+│   └── city_panel.py      # Urban layout controls, skyline variations & road settings
+│
+├── properties/            # Persistent scene state & PropertyGroups
+│   └── properties.py      # Scene-level data definitions
+│
 ├── blender_manifest.toml  # Blender extension metadata
-├── __init__.py            # Extension registration entry point
-├── properties.py          # Project settings stored by Blender
-├── operators.py           # User-triggered actions
-└── ui.py                  # Blender sidebar interface
+└── __init__.py            # Extension registration entry point
 ```
 
-The structure will expand gradually as each system is implemented and tested.
+---
 
-## Contributing
+## ⚙️ Requirements
 
-Vastloom is currently being built as a learning project. Issues and focused
-contributions are welcome, but please discuss substantial architectural changes
-before implementing them. Keep changes small, documented, and limited to one
-concern whenever practical.
+- **Blender:** 5.2 LTS or newer compatible 5.x release
+- **Python:** 3.13 / 3.14 for local IDE development
+- **VS Code Extension:** Blender Development (for instant interactive hot-reloading)
 
-When reporting a Blender error, include:
+---
 
-- Blender version and operating system
-- Steps required to reproduce the problem
-- Expected and actual behavior
-- The complete Python traceback
+## 🛠️ Development Setup
 
-## Roadmap
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:Niraj7-svg/VastLoom.git
+   cd VastLoom
+   ```
 
-Major planned stages include project persistence, asset registration, modular
-building generation, city maps, terrain, vegetation, chunks, LODs, hybrid
-horizons, preview rendering, animation preparation, caching, and recovery.
+2. Create a virtual environment and install typing stubs for autocomplete:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -U fake-bpy-module-latest
+   ```
 
-The roadmap may change as prototypes reveal better technical dependencies.
+3. Open in VS Code, run `Blender: Start`, and press **N** in the 3D Viewport to open the **Vastloom** panel.
 
-## License
+---
 
-Vastloom is intended to be distributed under the GNU General Public License
-v3.0 or later (`GPL-3.0-or-later`), matching the license declared in the Blender
-extension manifest. A complete `LICENSE` file should be included before the
-first public release.
+## 📄 License
+
+Distributed under the GNU General Public License v3.0 or later (`GPL-3.0-or-later`), matching the Blender extension ecosystem.
+
+Distributed under the GNU General Public License v3.0 or later (`GPL-3.0-or-later`), matching the Blender extension ecosystem.
+

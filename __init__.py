@@ -1,17 +1,27 @@
-import bpy #type: ignore
+import bpy
 
-#IMPORTING THE CLASS FORM THE PROERTIES.PY FILE
-from .properties import VASTLOOM_PG_ProjectSettings  # type: ignore
-CLASSES = (
-    VASTLOOM_PG_ProjectSettings,
-)
+from .properties import classes as property_classes, VASTLOOM_PG_ProjectSettings
+from .ui import classes as ui_classes
+from .operators import classes as operator_classes
+
+# Blender needs this to know what to register
+classes = property_classes + ui_classes + operator_classes
 
 
 def register():
-    for cls in CLASSES:
+    # Register every class with blender
+    for cls in classes:
         bpy.utils.register_class(cls)
 
+    # Attach our settings notebook to every Blender Scene
+    bpy.types.Scene.Vastloom_Settings = bpy.props.PointerProperty(  # type: ignore
+        type=VASTLOOM_PG_ProjectSettings
+    )
 
+    
 def unregister():
-    for cls in reversed(CLASSES):
+    del bpy.types.Scene.Vastloom_Settings # type: ignore
+        
+    for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
+        

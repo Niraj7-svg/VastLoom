@@ -1,0 +1,10 @@
+{
+  "include": ["."],
+  "exclude": [".venv"],
+  "stubPath": ".venv/lib/python3.14/site-packages",
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.14",
+  "typeCheckingMode": "basic",
+  "reportMissingModuleSource": "none"
+}
